@@ -1,0 +1,69 @@
+import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
+import sympy as sp
+import pandas as pd
+
+st.sidebar.markdown("# Regresión Polinomial")
+
+# Función para calcular y
+def calculate_y(x_values, expression):
+    return [expression.subs({x: xi}) for xi in x_values]
+
+# Configuración de la página
+st.title("Método Regresión Polinomial")
+st.write('''Descripción:
+
+La regresión polinomial es una técnica de ajuste de curvas que utiliza polinomios para modelar la relación entre una variable independiente (x) y una variable dependiente (y). En lugar de ajustar una línea recta, como en la regresión lineal, se ajusta un polinomio de grado superior.''')
+st.image("data:image/jpeg;base64,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", caption='Método gráfico ', use_column_width=True)
+
+st.write('''Algoritmo:
+
+1)Dado un conjunto de puntos de datos (x, y), se ajusta un polinomio de grado n para modelar la relación entre x e y.
+
+2)Se resuelven los coeficientes del polinomio utilizando técnicas como el método de mínimos cuadrados.
+
+3)El polinomio ajustado se utiliza para hacer predicciones y modelar la relación entre x e y.''')
+# Definir el rango de entrada
+start_range = st.sidebar.slider("Inicio del rango", -20.0, 20.0, 0.1)
+end_range = st.sidebar.slider("Fin del rango", -20.0, 20.0, 2.0)
+
+Archivo=st.sidebar.file_uploader("Suba el archivo CSV")
+
+# Lee el archivo CSV y almacénalo en un DataFrame
+df = pd.read_csv(Archivo)
+
+# Ingresar la función
+var_1 = st.sidebar.text_input("Variable", "X")
+x = np.array(df[var_1])
+var_2= st.sidebar.text_input("Variable", "Y")
+y = np.array(df[var_2])
+grado = st.sidebar.number_input("Grado",2)
+
+
+# Espacio reservado para la figura
+fig_placeholder = st.empty()
+tablita = st.empty()
+
+fig, ax = plt.subplots()
+# Ajusta un modelo de regresión polinomial de grado n
+coefficients = np.polyfit(x, y, grado)  # Grado representa el grado del polinomio
+
+# Crea una función polinomial a partir de los coeficientes
+poly = np.poly1d(coefficients)
+
+# Valores de x para la predicción
+x_reg = np.linspace(np.min(x),np.max(x),len(x)+100)
+
+# Realiza predicciones
+y_reg = poly(x_reg)
+
+# Grafica los resultados
+plt.scatter(x, y, label="Datos reales")
+plt.plot(x_reg, y_reg, color='red', label="Regresión polinomial")
+plt.legend()
+plt.grid()
+plt.show()
+
+# Mostrar la figura en el espacio reservado
+fig_placeholder.pyplot(fig)
