@@ -94,7 +94,7 @@ var = st.sidebar.text_input("Variable", "x")
 x = sp.symbols(var)
 func = st.sidebar.text_input("Función", "x**3 - x")
 y = sp.sympify(func)
-tol= st.sidebar.number_input("Tolerancia", 5)
+tol= st.sidebar.number_input("Tolerancia", 0.1)
 
 f= sp.lambdify(x,y)
 

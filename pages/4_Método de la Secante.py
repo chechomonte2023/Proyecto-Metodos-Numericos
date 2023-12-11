@@ -68,7 +68,7 @@ func = st.sidebar.text_input("Función", "exp(-x)-x")
 y = sp.sympify(func)
 xi_ant = st.sidebar.number_input("Valor anterior", 0)
 xi= st.sidebar.number_input("Valor inicial", 1)
-tol= st.sidebar.number_input("Tolerancia", 1)
+tol= st.sidebar.number_input("Tolerancia", 0.1)
 f= sp.lambdify(x,y)
 
 # Tolerancia y valores iniciales
